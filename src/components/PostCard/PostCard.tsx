@@ -11,7 +11,11 @@ import {
   ImageGallery,
 } from "@/components/AttachmentCard/AttachmentCard";
 import { ActionMenu } from "@/components/ui/ActionMenu";
-import { formatDate, stripHtml, truncate } from "@/utils/format";
+import {
+  formatDate,
+  htmlToPlainText,
+  sanitizeRichTextHtml,
+} from "@/utils/format";
 import { useI18n, useT } from "@/i18n";
 import type { PostWithAttachments } from "@/features/categories/types";
 
@@ -36,7 +40,8 @@ export function PostCard({
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   const documents = post.attachments.filter((a) => a.type === "document");
-  const preview = truncate(stripHtml(post.content), 120);
+  const previewHtml = sanitizeRichTextHtml(post.content);
+  const hasPreview = Boolean(htmlToPlainText(post.content));
 
   async function handleDelete() {
     if (confirm(t("post.confirmDelete"))) {
@@ -76,10 +81,11 @@ export function PostCard({
         </div>
       </div>
 
-      {preview && (
-        <p className="text-sm text-text-secondary leading-relaxed mb-3 line-clamp-3 whitespace-pre-line">
-          {preview}
-        </p>
+      {hasPreview && (
+        <div
+          className="post-rich-text text-sm text-text-secondary leading-relaxed mb-3 line-clamp-3"
+          dangerouslySetInnerHTML={{ __html: previewHtml }}
+        />
       )}
 
       {documents.length > 0 && (

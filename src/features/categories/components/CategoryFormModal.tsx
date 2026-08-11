@@ -108,10 +108,19 @@ export function CategoryFormModal({
         </div>
 
         <div className="flex gap-3 pt-2">
-          <Button type="button" variant="secondary" onClick={onClose} className="flex-1">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={onClose}
+            className="flex-1"
+          >
             {t("common.cancel")}
           </Button>
-          <Button type="submit" disabled={loading} className="flex-1">
+          <Button
+            type="submit"
+            disabled={loading}
+            className="flex-1 whitespace-nowrap "
+          >
             {loading
               ? t("common.saving")
               : editing

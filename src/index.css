@@ -76,6 +76,19 @@ body {
   padding-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
 }
 
+/* BottomNav height (~5rem) + system nav / gesture inset */
+.pb-nav {
+  padding-bottom: calc(
+    5rem + var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px))
+  );
+}
+
+.bottom-above-nav {
+  bottom: calc(
+    5rem + var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px))
+  );
+}
+
 .gradient-accent {
   background: linear-gradient(135deg, #6d4aff 0%, #8b6fff 50%, #a78bfa 100%);
 }
@@ -179,4 +192,30 @@ body {
   display: block;
   margin: 0;
   min-height: 1.5em;
+}
+
+.post-rich-text b,
+.post-rich-text strong {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.post-rich-text i,
+.post-rich-text em {
+  font-style: italic;
+}
+
+.post-rich-text u {
+  text-decoration: underline;
+}
+
+.post-rich-text a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.post-rich-text p,
+.post-rich-text div {
+  margin: 0;
 }

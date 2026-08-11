@@ -252,7 +252,7 @@ export function PostEditor({
     existingImages.length > 0;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-background safe-top safe-bottom animate-fade-in">
+    <div className="fixed inset-0 z-50 flex flex-col bg-background safe-top animate-fade-in">
       <header className="relative flex items-center justify-center px-4 py-4 bg-surface border-b border-border">
         <h1 className="text-base font-bold text-text">
           {mode === "create"

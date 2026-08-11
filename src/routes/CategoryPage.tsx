@@ -155,7 +155,7 @@ export function CategoryPage() {
       </div>
 
       {showFloatingAdd && (
-        <div className="fixed bottom-20 inset-x-0 px-4 z-30 max-w-lg mx-auto my-4">
+        <div className="fixed bottom-above-nav inset-x-0 px-4 z-30 max-w-lg mx-auto mb-4">
           <button
             onClick={() => setCreatingPost(true)}
             className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl gradient-accent text-white font-medium shadow-elevated active:scale-[0.98] transition-transform"

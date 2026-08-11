@@ -9,7 +9,7 @@ interface AppLayoutProps {
 export function AppLayout({ children, hideNav }: AppLayoutProps) {
   return (
     <div className="flex min-h-full flex-col bg-background">
-      <main className={hideNav ? "flex-1" : "flex-1 pb-20"}>{children}</main>
+      <main className={hideNav ? "flex-1" : "flex-1 pb-nav"}>{children}</main>
       {!hideNav && <BottomNav />}
     </div>
   );
