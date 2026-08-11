@@ -3,6 +3,7 @@ import { IconFileTypeDocx } from '@tabler/icons-react';
 import { loadFileBytes } from '@/services/file-bytes.service';
 import { extractDocxPlainText } from '@/services/docx-preview.service';
 import { AttachmentDownloadButton } from '@/components/AttachmentCard/AttachmentDownloadButton';
+import { useT } from '@/i18n';
 
 interface DocxPreviewProps {
   base64?: string;
@@ -15,6 +16,7 @@ interface DocxPreviewProps {
 type PreviewStatus = 'loading' | 'ready' | 'text' | 'failed';
 
 export function DocxPreview({ base64, localPath, name, mimeType, className }: DocxPreviewProps) {
+  const t = useT();
   const bodyRef = useRef<HTMLDivElement>(null);
   const styleRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<PreviewStatus>('loading');
@@ -144,7 +146,7 @@ export function DocxPreview({ base64, localPath, name, mimeType, className }: Do
         {status === 'failed' && (
           <div className="file-preview-scroll flex h-48 items-center justify-center gap-2 bg-blue-50/50">
             <IconFileTypeDocx size={24} className="text-blue-600" />
-            <span className="text-xs text-blue-700">فایل Word</span>
+            <span className="text-xs text-blue-700">{t('attachment.word')}</span>
           </div>
         )}
 

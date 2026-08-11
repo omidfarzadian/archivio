@@ -11,6 +11,18 @@ import {
   clearAllFiles,
   initFileStorage,
 } from './file.service';
+import { resolveInitialLocale, translate } from '@/i18n';
+
+function tBackup(
+  key:
+    | 'backup.shareTitle'
+    | 'backup.shareText'
+    | 'backup.shareDialog'
+    | 'backup.invalidFile'
+    | 'backup.invalidStructure',
+) {
+  return translate(resolveInitialLocale(), key);
+}
 
 interface BackupData {
   version: number;
@@ -87,7 +99,7 @@ export async function createBackup(): Promise<Blob> {
 
 export async function shareBackup(): Promise<void> {
   const blob = await createBackup();
-  const fileName = `archivio-backup-${new Date().toISOString().slice(0, 10)}.zip`;
+  const fileName = `mava-backup-${new Date().toISOString().slice(0, 10)}.zip`;
 
   if (Capacitor.isNativePlatform()) {
     const reader = new FileReader();
@@ -100,7 +112,7 @@ export async function shareBackup(): Promise<void> {
     });
 
     const { Filesystem, Directory } = await import('@capacitor/filesystem');
-    const path = `archivio/backups/${fileName}`;
+    const path = `mava/backups/${fileName}`;
     await Filesystem.writeFile({
       path,
       data: base64,
@@ -113,10 +125,10 @@ export async function shareBackup(): Promise<void> {
     });
 
     await Share.share({
-      title: 'پشتیبان‌گیری Archivio',
-      text: 'فایل پشتیبان Archivio',
+      title: tBackup('backup.shareTitle'),
+      text: tBackup('backup.shareText'),
       url: uri.uri,
-      dialogTitle: 'اشتراک‌گذاری پشتیبان',
+      dialogTitle: tBackup('backup.shareDialog'),
     });
   } else {
     const url = URL.createObjectURL(blob);
@@ -132,14 +144,14 @@ export async function restoreBackup(file: File): Promise<void> {
   const zip = await JSZip.loadAsync(file);
   const dbFile = zip.file('database.json');
   if (!dbFile) {
-    throw new Error('فایل پشتیبان نامعتبر است');
+    throw new Error(tBackup('backup.invalidFile'));
   }
 
   const jsonStr = await dbFile.async('string');
   const data: BackupData = JSON.parse(jsonStr);
 
   if (!data.categories || !data.posts || !data.attachments) {
-    throw new Error('ساختار فایل پشتیبان نامعتبر است');
+    throw new Error(tBackup('backup.invalidStructure'));
   }
 
   await clearAllFiles();

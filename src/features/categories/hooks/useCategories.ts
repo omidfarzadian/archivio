@@ -5,9 +5,11 @@ import {
   updateCategory,
   deleteCategory,
 } from '@/database/repositories/category.repository';
+import { useT } from '@/i18n';
 import type { Category, CategoryWithStats } from '../types';
 
 export function useCategories() {
+  const t = useT();
   const [categories, setCategories] = useState<CategoryWithStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,12 +20,12 @@ export function useCategories() {
       const data = await getAllCategories();
       setCategories(data);
     } catch (err) {
-      console.error('[Archivio] Failed to load categories:', err);
-      setError('خطا در بارگذاری دسته‌بندی‌ها');
+      console.error('[Mava] Failed to load categories:', err);
+      setError(t('category.loadError'));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     refresh();

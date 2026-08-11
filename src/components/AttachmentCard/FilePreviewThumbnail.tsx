@@ -10,6 +10,7 @@ import {
   IconFileTypeDocx,
 } from '@tabler/icons-react';
 import { getFileIcon } from '@/services/picker.service';
+import { useT } from '@/i18n';
 
 interface FilePreviewThumbnailProps {
   mimeType: string;
@@ -35,7 +36,11 @@ function FileTypeIcon({ mimeType, name }: { mimeType: string; name: string }) {
   }
 }
 
-function getFileTypeLabel(mimeType: string, name: string): string {
+function getFileTypeLabel(
+  mimeType: string,
+  name: string,
+  fileLabel: string,
+): string {
   const type = getFileIcon(mimeType, name);
   switch (type) {
     case 'excel':
@@ -45,7 +50,7 @@ function getFileTypeLabel(mimeType: string, name: string): string {
     case 'pdf':
       return 'PDF';
     default:
-      return 'فایل';
+      return fileLabel;
   }
 }
 
@@ -56,6 +61,8 @@ export function FilePreviewThumbnail({
   localPath,
   className,
 }: FilePreviewThumbnailProps) {
+  const t = useT();
+
   if (isExcelFile(mimeType, name)) {
     return (
       <ExcelPreview
@@ -86,7 +93,7 @@ export function FilePreviewThumbnail({
         <div className="flex items-center gap-2">
           <FileTypeIcon mimeType={mimeType} name={name} />
           <span className="text-xs font-medium text-text-secondary">
-            {getFileTypeLabel(mimeType, name)}
+            {getFileTypeLabel(mimeType, name, t('common.file'))}
           </span>
         </div>
         <AttachmentDownloadButton

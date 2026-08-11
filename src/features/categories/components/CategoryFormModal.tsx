@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { IconCheck } from "@tabler/icons-react";
 import { CATEGORY_COLORS } from "@/theme/constants";
+import { useT } from "@/i18n";
 import type { Category } from "@/features/categories/types";
 
 interface CategoryFormModalProps {
@@ -19,6 +20,7 @@ export function CategoryFormModal({
   onSubmit,
   editing,
 }: CategoryFormModalProps) {
+  const t = useT();
   const [name, setName] = useState(editing?.name || "");
   const [color, setColor] = useState(editing?.color || CATEGORY_COLORS[0]);
   const [error, setError] = useState("");
@@ -34,7 +36,7 @@ export function CategoryFormModal({
 
   async function handleSubmit() {
     if (!name.trim()) {
-      setError("نام دسته‌بندی الزامی است");
+      setError(t("category.form.nameRequired"));
       return;
     }
     setLoading(true);
@@ -45,8 +47,8 @@ export function CategoryFormModal({
       setColor(CATEGORY_COLORS[0]);
       onClose();
     } catch (err) {
-      console.error("[Archivio] Category save failed:", err);
-      setError("خطا در ذخیره دسته‌بندی");
+      console.error("[Mava] Category save failed:", err);
+      setError(t("category.form.saveError"));
     } finally {
       setLoading(false);
     }
@@ -56,7 +58,9 @@ export function CategoryFormModal({
     <BottomSheet
       open={open}
       onClose={onClose}
-      title={editing ? "ویرایش دسته‌بندی" : "دسته‌بندی جدید"}
+      title={
+        editing ? t("category.form.editTitle") : t("category.form.createTitle")
+      }
     >
       <form
         className="space-y-5"
@@ -66,20 +70,20 @@ export function CategoryFormModal({
         }}
       >
         <Input
-          label="نام دسته‌بندی"
+          label={t("category.form.nameLabel")}
           value={name}
           onChange={(e) => {
             setName(e.target.value);
             setError("");
           }}
-          placeholder="مثلاً: گزارش‌های مالی"
+          placeholder={t("category.form.namePlaceholder")}
           error={error}
           autoFocus
         />
 
         <div>
           <label className="mb-3 block text-sm font-medium text-text">
-            انتخاب رنگ
+            {t("category.form.colorLabel")}
           </label>
           <div className="flex gap-3 justify-center">
             {CATEGORY_COLORS.map((c) => (
@@ -89,7 +93,7 @@ export function CategoryFormModal({
                 onClick={() => setColor(c)}
                 className="relative h-10 w-10 rounded-full transition-transform hover:scale-110 active:scale-95 border-2 border-solid border-white outline-1 outline-solid outline-gray-200"
                 style={{ backgroundColor: c }}
-                aria-label={`رنگ ${c}`}
+                aria-label={t("common.color", { color: c })}
               >
                 {color === c && (
                   <IconCheck
@@ -105,14 +109,14 @@ export function CategoryFormModal({
 
         <div className="flex gap-3 pt-2">
           <Button type="button" variant="secondary" onClick={onClose} className="flex-1">
-            انصراف
+            {t("common.cancel")}
           </Button>
           <Button type="submit" disabled={loading} className="flex-1">
             {loading
-              ? "در حال ذخیره..."
+              ? t("common.saving")
               : editing
-                ? "ذخیره"
-                : "ایجاد دسته‌بندی"}
+                ? t("common.save")
+                : t("category.form.create")}
           </Button>
         </div>
       </form>

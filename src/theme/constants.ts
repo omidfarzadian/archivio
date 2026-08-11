@@ -7,8 +7,6 @@ export const CATEGORY_COLORS = [
   '#32D4C8',
 ] as const;
 
-export const APP_NAME = 'Archivio';
-
 export const STORAGE_DIRS = {
   images: 'images',
   documents: 'documents',

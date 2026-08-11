@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { IconArrowRight, IconPlus, IconSearch } from "@tabler/icons-react";
+import { IconArrowLeft, IconArrowRight, IconPlus, IconSearch } from "@tabler/icons-react";
 import { AppLayout, PageHeader } from "@/components/ui/Layout";
 import { PostCard } from "@/components/PostCard/PostCard";
 import { PostEditor } from "@/features/posts/components/PostEditor";
@@ -10,12 +10,16 @@ import type {
   Category,
   PostWithAttachments,
 } from "@/features/categories/types";
-import { formatPersianNumber } from "@/utils/format";
+import { formatNumber } from "@/utils/format";
+import { useI18n, useT } from "@/i18n";
 import type { PickedFile } from "@/services/picker.service";
 
 export function CategoryPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const t = useT();
+  const { locale, isRtl } = useI18n();
+  const BackIcon = isRtl ? IconArrowRight : IconArrowLeft;
   const [category, setCategory] = useState<Category | null>(null);
   const [creatingPost, setCreatingPost] = useState(false);
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
@@ -77,15 +81,19 @@ export function CategoryPage() {
       <PageHeader
         title={category?.name || "..."}
         subtitle={
-          category ? `${formatPersianNumber(posts.length)} مطلب` : undefined
+          category
+            ? t("category.postCount", {
+                count: formatNumber(posts.length, locale),
+              })
+            : undefined
         }
         leftAction={
           <button
             onClick={() => navigate("/")}
             className="p-2"
-            aria-label="بازگشت"
+            aria-label={t("common.back")}
           >
-            <IconArrowRight size={22} className="text-text" />
+            <BackIcon size={22} className="text-text" />
           </button>
         }
         rightAction={
@@ -94,7 +102,7 @@ export function CategoryPage() {
               type="button"
               onClick={() => setCreatingPost(true)}
               className="flex h-10 w-10 items-center justify-center rounded-2xl gradient-accent shadow-elevated active:scale-95 transition-transform"
-              aria-label="افزودن مطلب جدید"
+              aria-label={t("category.addPost")}
             >
               <IconPlus size={22} className="text-white" stroke={2.5} />
             </button>
@@ -109,12 +117,12 @@ export function CategoryPage() {
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="جستجو در مطالب..."
-              className="w-full rounded-2xl border border-border bg-surface py-3 pr-11 pl-4 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
+              placeholder={t("category.searchPosts")}
+              className="w-full rounded-2xl border border-border bg-surface py-3 pe-11 ps-4 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
             />
             <IconSearch
               size={20}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary"
+              className="absolute end-4 top-1/2 -translate-y-1/2 text-text-secondary"
             />
           </div>
         )}
@@ -130,9 +138,7 @@ export function CategoryPage() {
           </div>
         ) : posts.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-text-secondary text-sm">
-              هنوز مطلبی در این دسته‌بندی نیست
-            </p>
+            <p className="text-text-secondary text-sm">{t("category.noPosts")}</p>
           </div>
         ) : (
           <div className="space-y-4 pb-4">
@@ -155,7 +161,7 @@ export function CategoryPage() {
             className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl gradient-accent text-white font-medium shadow-elevated active:scale-[0.98] transition-transform"
           >
             <IconPlus size={20} stroke={2.5} />
-            افزودن مطلب جدید
+            {t("category.addPost")}
           </button>
         </div>
       )}

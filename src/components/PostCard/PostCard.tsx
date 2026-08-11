@@ -12,6 +12,7 @@ import {
 } from "@/components/AttachmentCard/AttachmentCard";
 import { ActionMenu } from "@/components/ui/ActionMenu";
 import { formatDate, stripHtml, truncate } from "@/utils/format";
+import { useI18n, useT } from "@/i18n";
 import type { PostWithAttachments } from "@/features/categories/types";
 
 interface PostCardProps {
@@ -29,6 +30,8 @@ export function PostCard({
   isStarred,
   onToggleStar,
 }: PostCardProps) {
+  const t = useT();
+  const { locale } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -36,7 +39,7 @@ export function PostCard({
   const preview = truncate(stripHtml(post.content), 120);
 
   async function handleDelete() {
-    if (confirm("آیا از حذف این مطلب مطمئن هستید؟")) {
+    if (confirm(t("post.confirmDelete"))) {
       onDelete();
     }
   }
@@ -51,7 +54,7 @@ export function PostCard({
               type="button"
               onClick={onToggleStar}
               className="p-1"
-              aria-label="ستاره"
+              aria-label={t("common.star")}
             >
               {isStarred ? (
                 <IconStarFilled size={18} className="text-amber-400" />
@@ -65,7 +68,7 @@ export function PostCard({
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
             className="p-1 rounded-lg hover:bg-background transition-colors"
-            aria-label="منو"
+            aria-label={t("common.menu")}
             aria-expanded={menuOpen}
           >
             <IconDotsVertical size={18} className="text-text-secondary" />
@@ -94,7 +97,7 @@ export function PostCard({
       )}
 
       <p className="text-xs text-text-secondary">
-        {formatDate(post.createdAt)}
+        {formatDate(post.createdAt, locale)}
       </p>
 
       <ActionMenu
@@ -103,12 +106,12 @@ export function PostCard({
         anchorRef={menuButtonRef}
         items={[
           {
-            label: "ویرایش",
+            label: t("common.edit"),
             icon: <IconPencil size={18} stroke={1.75} />,
             onClick: onEdit,
           },
           {
-            label: "حذف",
+            label: t("common.delete"),
             icon: <IconTrash size={18} stroke={1.75} />,
             variant: "danger",
             onClick: handleDelete,

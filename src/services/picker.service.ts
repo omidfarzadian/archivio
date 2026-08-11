@@ -1,4 +1,5 @@
 import type { Attachment } from '@/features/categories/types';
+import { resolveInitialLocale, translate } from '@/i18n';
 
 export interface PickedFile {
   name: string;
@@ -15,7 +16,8 @@ function readFileAsBase64(file: File): Promise<string> {
       const base64 = result.split(',')[1] || result;
       resolve(base64);
     };
-    reader.onerror = () => reject(new Error('خطا در خواندن فایل'));
+    reader.onerror = () =>
+      reject(new Error(translate(resolveInitialLocale(), 'picker.readError')));
     reader.readAsDataURL(file);
   });
 }

@@ -1,6 +1,7 @@
 import { IconDotsVertical } from '@tabler/icons-react';
 import { FolderIcon3D } from '@/components/ui/FolderIcon3D';
-import { formatPersianNumber, formatRelativeDate } from '@/utils/format';
+import { formatNumber, formatRelativeDate } from '@/utils/format';
+import { useI18n, useT } from '@/i18n';
 import type { CategoryWithStats } from '@/features/categories/types';
 import { useState, useRef, useEffect } from 'react';
 
@@ -12,6 +13,8 @@ interface CategoryCardProps {
 }
 
 export function CategoryCard({ category, onClick, onEdit, onDelete }: CategoryCardProps) {
+  const t = useT();
+  const { locale } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -30,38 +33,38 @@ export function CategoryCard({ category, onClick, onEdit, onDelete }: CategoryCa
       className="relative rounded-3xl bg-surface p-4 shadow-card transition-all duration-300 hover:shadow-card-hover active:scale-[0.98] cursor-pointer"
       onClick={onClick}
     >
-      <div className="absolute top-3 left-3 z-10" ref={menuRef}>
+      <div className="absolute top-3 start-3 z-10" ref={menuRef}>
         <button
           onClick={(e) => {
             e.stopPropagation();
             setMenuOpen(!menuOpen);
           }}
           className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-background transition-colors"
-          aria-label="منو"
+          aria-label={t('common.menu')}
         >
           <IconDotsVertical size={18} className="text-text-secondary" />
         </button>
         {menuOpen && (
-          <div className="absolute top-full left-0 mt-1 w-36 rounded-2xl bg-surface border border-border shadow-elevated overflow-hidden z-20 animate-fade-in">
+          <div className="absolute top-full start-0 mt-1 w-36 rounded-2xl bg-surface border border-border shadow-elevated overflow-hidden z-20 animate-fade-in">
             <button
-              className="w-full px-4 py-3 text-right text-sm hover:bg-background transition-colors"
+              className="w-full px-4 py-3 text-start text-sm hover:bg-background transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
                 setMenuOpen(false);
                 onEdit();
               }}
             >
-              ویرایش
+              {t('common.edit')}
             </button>
             <button
-              className="w-full px-4 py-3 text-right text-sm text-danger hover:bg-red-50 transition-colors"
+              className="w-full px-4 py-3 text-start text-sm text-danger hover:bg-red-50 transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
                 setMenuOpen(false);
                 onDelete();
               }}
             >
-              حذف
+              {t('common.delete')}
             </button>
           </div>
         )}
@@ -74,10 +77,14 @@ export function CategoryCard({ category, onClick, onEdit, onDelete }: CategoryCa
         </h3>
         <div className="mt-2 flex flex-col items-center gap-0.5">
           <span className="text-sm text-text-secondary">
-            {formatPersianNumber(category.postCount)} مطلب
+            {t('category.postCount', {
+              count: formatNumber(category.postCount, locale),
+            })}
           </span>
           <span className="text-xs text-text-secondary/70">
-            تغییر: {formatRelativeDate(category.updatedAt)}
+            {t('category.changed', {
+              date: formatRelativeDate(category.updatedAt, locale, t),
+            })}
           </span>
         </div>
       </div>

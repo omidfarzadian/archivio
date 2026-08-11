@@ -1,5 +1,6 @@
 import { IconX } from "@tabler/icons-react";
 import type { FormEvent, ReactNode } from "react";
+import { useT } from "@/i18n";
 
 interface ModalProps {
   open: boolean;
@@ -9,6 +10,7 @@ interface ModalProps {
 }
 
 export function Modal({ open, onClose, title, children }: ModalProps) {
+  const t = useT();
   if (!open) return null;
 
   return (
@@ -30,7 +32,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
               type="button"
               onClick={onClose}
               className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-background transition-colors"
-              aria-label="بستن"
+              aria-label={t("common.close")}
             >
               <IconX size={20} className="text-text-secondary" />
             </button>

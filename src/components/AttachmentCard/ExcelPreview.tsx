@@ -5,6 +5,7 @@ import {
 } from "@/services/xlsx-preview.service";
 import { loadFileBytes } from "@/services/file-bytes.service";
 import { AttachmentDownloadButton } from "@/components/AttachmentCard/AttachmentDownloadButton";
+import { useT } from "@/i18n";
 import { useEffect, useState } from "react";
 
 interface ExcelPreviewProps {
@@ -22,6 +23,7 @@ export function ExcelPreview({
   mimeType,
   className,
 }: ExcelPreviewProps) {
+  const t = useT();
   const [preview, setPreview] = useState<ExcelPreviewData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -72,7 +74,7 @@ export function ExcelPreview({
       >
         <div className="file-preview-scroll flex h-48 items-center justify-center gap-2 bg-green-50/50">
           <IconFileSpreadsheet size={24} className="text-green-600" />
-          <span className="text-xs text-green-700">فایل Excel</span>
+          <span className="text-xs text-green-700">{t('attachment.excel')}</span>
         </div>
       </div>
     );

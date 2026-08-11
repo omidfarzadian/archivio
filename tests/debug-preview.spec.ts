@@ -11,6 +11,6 @@ test('debug init on preview', async ({ page }) => {
   const body = await page.locator('body').innerText({ timeout: 5000 }).catch(() => 'TIMEOUT');
   console.log('BODY:', String(body).slice(0, 500));
   console.log('LOGS:', logs.filter((l) => 
-    l.includes('wasm') || l.includes('Archivio') || l.includes('Error') || l.includes('PAGEERROR') || l.includes('jeep')
+    l.includes('wasm') || l.includes('Mava') || l.includes('Error') || l.includes('PAGEERROR') || l.includes('jeep')
   ).join('\n'));
 });

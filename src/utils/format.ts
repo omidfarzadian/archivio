@@ -1,32 +1,68 @@
+import { translate, type TranslationKey } from '@/i18n/translate';
+import type { Locale, TranslationParams } from '@/i18n/types';
+
+type TranslateFn = (
+  key: TranslationKey,
+  params?: TranslationParams,
+) => string;
+
+function localeTag(locale: Locale): string {
+  return locale === 'fa' ? 'fa-IR' : 'en-US';
+}
+
+export function formatNumber(value: number, locale: Locale = 'fa'): string {
+  return value.toLocaleString(localeTag(locale));
+}
+
+/** @deprecated Prefer formatNumber with locale */
 export function formatPersianNumber(value: number): string {
-  return value.toLocaleString('fa-IR');
+  return formatNumber(value, 'fa');
 }
 
-export function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${formatPersianNumber(bytes)} بایت`;
-  if (bytes < 1024 * 1024) return `${formatPersianNumber(Math.round(bytes / 1024))} کیلوبایت`;
-  return `${(bytes / (1024 * 1024)).toFixed(1).replace('.', '/')} مگابایت`;
+export function formatFileSize(
+  bytes: number,
+  locale: Locale = 'fa',
+  t: TranslateFn = (key, params) => translate(locale, key, params),
+): string {
+  if (bytes < 1024) {
+    return t('format.byte', { n: formatNumber(bytes, locale) });
+  }
+  if (bytes < 1024 * 1024) {
+    return t('format.kilobyte', {
+      n: formatNumber(Math.round(bytes / 1024), locale),
+    });
+  }
+  const mb = (bytes / (1024 * 1024)).toFixed(1);
+  const formatted =
+    locale === 'fa' ? mb.replace('.', '/') : mb;
+  return t('format.megabyte', { n: formatted });
 }
 
-export function formatRelativeDate(dateStr: string): string {
+export function formatRelativeDate(
+  dateStr: string,
+  locale: Locale = 'fa',
+  t: TranslateFn = (key, params) => translate(locale, key, params),
+): string {
   const date = new Date(dateStr);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-  if (diffDays === 0) return 'امروز';
-  if (diffDays === 1) return 'دیروز';
-  if (diffDays < 7) return `${formatPersianNumber(diffDays)} روز پیش`;
+  if (diffDays === 0) return t('format.today');
+  if (diffDays === 1) return t('format.yesterday');
+  if (diffDays < 7) {
+    return t('format.daysAgo', { n: formatNumber(diffDays, locale) });
+  }
 
-  return date.toLocaleDateString('fa-IR', {
+  return date.toLocaleDateString(localeTag(locale), {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
 }
 
-export function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString('fa-IR', {
+export function formatDate(dateStr: string, locale: Locale = 'fa'): string {
+  return new Date(dateStr).toLocaleDateString(localeTag(locale), {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -58,7 +94,11 @@ export function truncate(text: string, maxLength: number): string {
 }
 
 export function generateId(): string {
-  return crypto.randomUUID();
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 11)}`;
 }
 
 export function cn(...classes: (string | false | null | undefined)[]): string {

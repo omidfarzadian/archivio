@@ -15,6 +15,7 @@ import { AttachmentDownloadButton } from "@/components/AttachmentCard/Attachment
 import { type PickedFile } from "@/services/picker.service";
 import { readFileAsBlobUrl } from "@/services/file.service";
 import { cn } from "@/utils/format";
+import { useT } from "@/i18n";
 import type { Attachment } from "@/features/categories/types";
 
 type FormatCommand = 'bold' | 'italic' | 'underline';
@@ -43,13 +44,6 @@ interface PostEditorProps {
   onDelete?: () => Promise<void>;
 }
 
-const TOOLBAR_ITEMS = [
-  { icon: IconBold, label: "Bold", command: "bold" },
-  { icon: IconItalic, label: "Italic", command: "italic" },
-  { icon: IconUnderline, label: "Underline", command: "underline" },
-  { icon: IconLink, label: "Link", command: "createLink" },
-] as const;
-
 function ExistingImageThumb({
   attachment,
   onRemove,
@@ -57,6 +51,7 @@ function ExistingImageThumb({
   attachment: Attachment;
   onRemove?: () => void;
 }) {
+  const t = useT();
   const [url, setUrl] = useState<string | null>(
     attachment.localPath.startsWith("data:") ? attachment.localPath : null,
   );
@@ -94,13 +89,13 @@ function ExistingImageThumb({
         <button
           type="button"
           onClick={onRemove}
-          className="absolute top-1.5 left-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-surface/90 border border-border shadow-sm"
-          aria-label="حذف تصویر"
+          className="absolute top-1.5 start-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-surface/90 border border-border shadow-sm"
+          aria-label={t("post.editor.deleteImage")}
         >
           <IconX size={12} className="text-text-secondary" />
         </button>
       )}
-      <div className="absolute top-1.5 right-1.5">
+      <div className="absolute top-1.5 end-1.5">
         <AttachmentDownloadButton
           name={attachment.name}
           mimeType={attachment.mimeType}
@@ -124,6 +119,7 @@ export function PostEditor({
   initialContent = "",
   onDelete,
 }: PostEditorProps) {
+  const t = useT();
   const [title, setTitle] = useState(initialTitle);
   const [content, setContent] = useState(initialContent);
   const [pickedFiles, setPickedFiles] = useState<PickedFile[]>([]);
@@ -215,7 +211,7 @@ export function PostEditor({
       return;
     }
     if (command === "createLink") {
-      const url = prompt("آدرس لینک:");
+      const url = prompt(t("post.editor.linkPrompt"));
       if (url) document.execCommand("createLink", false, url);
       return;
     }
@@ -231,6 +227,17 @@ export function PostEditor({
       void addFiles(e.dataTransfer.files);
     }
   }
+
+  const toolbarItems = [
+    { icon: IconBold, label: t("post.editor.toolbar.bold"), command: "bold" },
+    { icon: IconItalic, label: t("post.editor.toolbar.italic"), command: "italic" },
+    {
+      icon: IconUnderline,
+      label: t("post.editor.toolbar.underline"),
+      command: "underline",
+    },
+    { icon: IconLink, label: t("post.editor.toolbar.link"), command: "createLink" },
+  ] as const;
 
   const documentFiles = pickedFiles.filter(
     (f) => !f.mimeType.startsWith("image/"),
@@ -248,13 +255,15 @@ export function PostEditor({
     <div className="fixed inset-0 z-50 flex flex-col bg-background safe-top safe-bottom animate-fade-in">
       <header className="relative flex items-center justify-center px-4 py-4 bg-surface border-b border-border">
         <h1 className="text-base font-bold text-text">
-          {mode === "create" ? "افزودن مطلب جدید" : "ویرایش مطلب"}
+          {mode === "create"
+            ? t("post.editor.createTitle")
+            : t("post.editor.editTitle")}
         </h1>
         <button
           type="button"
           onClick={onClose}
-          className="absolute left-4 flex h-9 w-9 items-center justify-center rounded-full hover:bg-background transition-colors"
-          aria-label="بستن"
+          className="absolute start-4 flex h-9 w-9 items-center justify-center rounded-full hover:bg-background transition-colors"
+          aria-label={t("common.close")}
         >
           <IconX size={22} className="text-text-secondary" />
         </button>
@@ -263,20 +272,20 @@ export function PostEditor({
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-lg mx-auto px-4 py-5 space-y-6">
           <Input
-            label="عنوان مطلب"
+            label={t("post.editor.titleLabel")}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="عنوان مطلب را وارد کنید"
+            placeholder={t("post.editor.titlePlaceholder")}
             className="text-base font-medium"
           />
 
           <div>
             <label className="mb-2 block text-sm font-medium text-text">
-              متن مطلب
+              {t("post.editor.contentLabel")}
             </label>
             <div className="rounded-2xl border border-border bg-surface overflow-hidden">
               <div className="flex items-center gap-2 px-2 py-2 border-b border-border overflow-x-auto scrollbar-hide ">
-                {TOOLBAR_ITEMS.map(({ icon: Icon, label, command }) => {
+                {toolbarItems.map(({ icon: Icon, label, command }) => {
                   const isToggleable = FORMAT_COMMANDS.has(command);
                   const isActive =
                     isToggleable && activeFormats[command as FormatCommand];
@@ -318,7 +327,7 @@ export function PostEditor({
                 onKeyUp={updateActiveFormats}
                 onMouseUp={updateActiveFormats}
                 onFocus={updateActiveFormats}
-                data-placeholder="متن مطلب را بنویسید..."
+                data-placeholder={t("post.editor.contentPlaceholder")}
                 className="post-editor-content min-h-[180px] px-4 py-3.5 text-sm text-text leading-relaxed outline-none empty:before:content-[attr(data-placeholder)] empty:before:text-text-secondary/50"
               />
             </div>
@@ -326,7 +335,7 @@ export function PostEditor({
 
           <div>
             <label className="mb-3 block text-sm font-medium text-text">
-              فایل‌ها و تصاویر
+              {t("post.editor.attachmentsLabel")}
             </label>
 
             <div className="space-y-3">
@@ -380,12 +389,12 @@ export function PostEditor({
                             prev.filter((f) => f !== file),
                           )
                         }
-                        className="absolute top-1.5 left-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-surface/90 border border-border shadow-sm"
-                        aria-label="حذف تصویر"
+                        className="absolute top-1.5 start-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-surface/90 border border-border shadow-sm"
+                        aria-label={t("post.editor.deleteImage")}
                       >
                         <IconX size={12} className="text-text-secondary" />
                       </button>
-                      <div className="absolute top-1.5 right-1.5">
+                      <div className="absolute top-1.5 end-1.5">
                         <AttachmentDownloadButton
                           name={file.name}
                           mimeType={file.mimeType}
@@ -419,7 +428,7 @@ export function PostEditor({
                       <IconPlus size={20} className="text-text-secondary" />
                     </div>
                     <span className="text-sm text-text-secondary">
-                      افزودن فایل یا تصویر
+                      {t("post.editor.addMore")}
                     </span>
                   </>
                 ) : (
@@ -432,10 +441,10 @@ export function PostEditor({
                       />
                     </div>
                     <p className="text-sm font-medium text-text text-center">
-                      برای انتخاب یا رها کردن فایل‌ها کلیک کنید
+                      {t("post.editor.dropHint")}
                     </p>
                     <p className="text-xs text-text-secondary text-center leading-relaxed">
-                      عکس، Excel، Word و سایر فایل‌ها
+                      {t("post.editor.dropSubhint")}
                     </p>
                   </>
                 )}
@@ -466,34 +475,34 @@ export function PostEditor({
               <Button
                 variant="danger"
                 onClick={async () => {
-                  if (confirm("آیا از حذف این مطلب مطمئن هستید؟")) {
+                  if (confirm(t("post.confirmDelete"))) {
                     await onDelete();
                     onClose();
                   }
                 }}
                 className="flex-1 border border-border"
               >
-                حذف مطلب
+                {t("post.editor.deletePost")}
               </Button>
               <Button
                 onClick={handleSave}
                 disabled={saving || !title.trim()}
                 className="flex-1"
               >
-                {saving ? "در حال ذخیره..." : "ذخیره تغییرات"}
+                {saving ? t("common.saving") : t("post.editor.saveChanges")}
               </Button>
             </>
           ) : (
             <>
               <Button variant="secondary" onClick={onClose} className="flex-1">
-                انصراف
+                {t("common.cancel")}
               </Button>
               <Button
                 onClick={handleSave}
                 disabled={saving || !title.trim()}
                 className="flex-1"
               >
-                {saving ? "در حال ذخیره..." : "ذخیره مطلب"}
+                {saving ? t("common.saving") : t("post.editor.savePost")}
               </Button>
             </>
           )}

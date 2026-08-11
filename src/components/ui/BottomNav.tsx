@@ -1,15 +1,17 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { IconCategory, IconSearch, IconSettings } from '@tabler/icons-react';
+import { useT } from '@/i18n';
 import { cn } from '@/utils/format';
-
-const tabs = [
-  { to: '/', label: 'دسته‌بندی‌ها', icon: IconCategory },
-  { to: '/search', label: 'جستجو', icon: IconSearch },
-  { to: '/settings', label: 'تنظیمات', icon: IconSettings },
-];
 
 export function BottomNav() {
   const location = useLocation();
+  const t = useT();
+
+  const tabs = [
+    { to: '/', label: t('nav.categories'), icon: IconCategory },
+    { to: '/search', label: t('nav.search'), icon: IconSearch },
+    { to: '/settings', label: t('nav.settings'), icon: IconSettings },
+  ] as const;
 
   return (
     <nav className="fixed bottom-0 inset-x-0 z-40 border-t border-border bg-surface/95 backdrop-blur-lg safe-bottom">

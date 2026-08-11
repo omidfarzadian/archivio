@@ -6,13 +6,18 @@ import { AttachmentDownloadButton } from "@/components/AttachmentCard/Attachment
 import type { Attachment } from "@/features/categories/types";
 import { useEffect, useState } from "react";
 import { readFileAsBlobUrl } from "@/services/file.service";
+import { useI18n, useT } from "@/i18n";
 
 interface AttachmentCardProps {
   attachment: Attachment;
   onRemove?: () => void;
 }
 
-function getFileTypeLabel(mimeType: string, name: string): string {
+function getFileTypeLabel(
+  mimeType: string,
+  name: string,
+  fileLabel: string,
+): string {
   const type = getFileIcon(mimeType, name);
   switch (type) {
     case "excel":
@@ -22,7 +27,7 @@ function getFileTypeLabel(mimeType: string, name: string): string {
     case "pdf":
       return "PDF";
     default:
-      return "فایل";
+      return fileLabel;
   }
 }
 
@@ -33,6 +38,9 @@ function DocumentAttachmentContent({
   attachment: Attachment;
   onRemove?: () => void;
 }) {
+  const t = useT();
+  const { locale } = useI18n();
+
   return (
     <div className="flex flex-col-reverse gap-3 p-3">
       <FilePreviewThumbnail
@@ -49,11 +57,15 @@ function DocumentAttachmentContent({
             {attachment.name}
           </p>
           <p
-            className="text-left text-xs text-text-secondary mt-0.5"
+            className="text-start text-xs text-text-secondary mt-0.5"
             style={{ direction: "ltr" }}
           >
-            {getFileTypeLabel(attachment.mimeType, attachment.name)} ·{" "}
-            {formatFileSize(attachment.size)}
+            {getFileTypeLabel(
+              attachment.mimeType,
+              attachment.name,
+              t("common.file"),
+            )}{" "}
+            · {formatFileSize(attachment.size, locale, t)}
           </p>
         </div>
         {onRemove && (
@@ -61,7 +73,7 @@ function DocumentAttachmentContent({
             type="button"
             onClick={onRemove}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full hover:bg-background transition-colors"
-            aria-label="حذف فایل"
+            aria-label={t("post.editor.deleteFile")}
           >
             <IconX size={18} className="text-text-secondary" />
           </button>
@@ -72,6 +84,7 @@ function DocumentAttachmentContent({
 }
 
 export function AttachmentCard({ attachment, onRemove }: AttachmentCardProps) {
+  const t = useT();
   const [thumbUrl, setThumbUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -109,7 +122,7 @@ export function AttachmentCard({ attachment, onRemove }: AttachmentCardProps) {
             <div className="h-full w-full animate-pulse bg-border" />
           )}
         </div>
-        <div className="absolute top-1.5 right-1.5 flex items-center gap-1">
+        <div className="absolute top-1.5 end-1.5 flex items-center gap-1">
           <AttachmentDownloadButton
             name={attachment.name}
             mimeType={attachment.mimeType}
@@ -121,8 +134,8 @@ export function AttachmentCard({ attachment, onRemove }: AttachmentCardProps) {
           <button
             type="button"
             onClick={onRemove}
-            className="absolute top-1.5 left-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-surface/90 border border-border shadow-sm"
-            aria-label="حذف تصویر"
+            className="absolute top-1.5 start-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-surface/90 border border-border shadow-sm"
+            aria-label={t("post.editor.deleteImage")}
           >
             <IconX size={12} className="text-text-secondary" />
           </button>

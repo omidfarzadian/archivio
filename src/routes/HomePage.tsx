@@ -6,10 +6,12 @@ import { CategoryCard } from "@/components/CategoryCard/CategoryCard";
 import { EmptyState } from "@/components/EmptyState/EmptyState";
 import { CategoryFormModal } from "@/features/categories/components/CategoryFormModal";
 import { useCategories } from "@/features/categories/hooks/useCategories";
+import { useT } from "@/i18n";
 import type { Category } from "@/features/categories/types";
 
 export function HomePage() {
   const navigate = useNavigate();
+  const t = useT();
   const { categories, loading, add, edit, remove } = useCategories();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
@@ -42,7 +44,7 @@ export function HomePage() {
   }
 
   async function handleDelete(category: Category) {
-    if (confirm(`آیا از حذف دسته‌بندی «${category.name}» مطمئن هستید؟`)) {
+    if (confirm(t("home.deleteConfirm", { name: category.name }))) {
       await remove(category.id);
     }
   }
@@ -50,12 +52,12 @@ export function HomePage() {
   return (
     <AppLayout>
       <PageHeader
-        title="آرشیویو"
+        title={t("app.name")}
         rightAction={
           <button
             onClick={openCreate}
             className="flex h-10 w-10 items-center justify-center rounded-2xl gradient-accent shadow-elevated active:scale-95 transition-transform"
-            aria-label="دسته‌بندی جدید"
+            aria-label={t("home.newCategory")}
           >
             <IconFolderPlus size={22} className="text-white" stroke={2.5} />
           </button>
@@ -81,19 +83,19 @@ export function HomePage() {
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="جستجو در دسته‌بندی‌ها..."
-                className="w-full rounded-2xl border border-border bg-surface py-3 pr-11 pl-4 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
+                placeholder={t("home.searchPlaceholder")}
+                className="w-full rounded-2xl border border-border bg-surface py-3 pe-11 ps-4 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
               />
               <IconSearch
                 size={20}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary"
+                className="absolute end-4 top-1/2 -translate-y-1/2 text-text-secondary"
               />
             </div>
 
             {filteredCategories.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-text-secondary text-sm">
-                  دسته‌بندی‌ای با این نام پیدا نشد
+                  {t("home.noSearchResults")}
                 </p>
               </div>
             ) : (

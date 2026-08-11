@@ -1,11 +1,31 @@
 <!doctype html>
-<html lang="fa" dir="rtl">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="description" content="Personal Information Manager" />
-    <title>Archivio</title>
+    <meta name="description" content="Mava — Statistics & Information Management" />
+    <title>Mava</title>
+    <script>
+      (function () {
+        try {
+          var key = 'mava.locale';
+          var stored = localStorage.getItem(key);
+          var locale =
+            stored === 'fa' || stored === 'en'
+              ? stored
+              : (navigator.language || '')
+                    .toLowerCase()
+                    .indexOf('fa') === 0
+                ? 'fa'
+                : 'en';
+          document.documentElement.lang = locale === 'fa' ? 'fa' : 'en';
+          document.documentElement.dir = locale === 'fa' ? 'rtl' : 'ltr';
+          document.documentElement.dataset.locale = locale;
+          document.title = locale === 'fa' ? 'ماوا' : 'Mava';
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
