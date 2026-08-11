@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Archivio</string>
-    <string name="title_activity_main">Archivio</string>
-    <string name="package_name">com.archivio.app</string>
-    <string name="custom_url_scheme">com.archivio.app</string>
+    <string name="app_name">ماوا</string>
+    <string name="title_activity_main">ماوا</string>
+    <string name="package_name">com.mava.app</string>
+    <string name="custom_url_scheme">com.mava.app</string>
 </resources>

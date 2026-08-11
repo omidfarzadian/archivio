@@ -1,4 +1,4 @@
-package com.archivio.app;
+package com.mava.app;
 
 import com.getcapacitor.BridgeActivity;
 
