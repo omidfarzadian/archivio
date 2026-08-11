@@ -5,7 +5,7 @@ import {
 } from '@capacitor-community/sqlite';
 import { MIGRATION_V1 } from './migrations/001_initial';
 
-export const DB_NAME = 'archivio_db';
+export const DB_NAME = 'mava_db';
 const DB_VERSION = 1;
 
 let sqlite: SQLiteConnection | null = null;
@@ -13,6 +13,12 @@ let db: SQLiteDBConnection | null = null;
 
 export async function initNativeDatabase(): Promise<void> {
   sqlite = new SQLiteConnection(CapacitorSQLite);
+
+  try {
+    await sqlite.checkConnectionsConsistency();
+  } catch {
+    // Drop stale connection metadata after an app restart.
+  }
 
   const isConn = (await sqlite.isConnection(DB_NAME, false)).result;
   if (isConn) {
@@ -30,7 +36,7 @@ export async function initNativeDatabase(): Promise<void> {
   await db.open();
 
   for (const migration of MIGRATION_V1) {
-    await db.execute(migration, false);
+    await db.execute(migration);
   }
 }
 
@@ -56,13 +62,20 @@ export async function nativeRunWrite(
   values: (string | number | null)[] = [],
 ): Promise<void> {
   const database = await getNativeDatabase();
-  await database.run(statement, values, false);
+  const result = await database.run(statement, values);
+  const changeCount =
+    typeof result.changes === 'object' && result.changes !== null
+      ? Number(result.changes.changes ?? -1)
+      : Number(result.changes ?? -1);
+
+  if (changeCount < 0) {
+    throw new Error('Native SQLite write failed');
+  }
 }
 
 export async function persistNativeDatabase(): Promise<void> {
-  if (sqlite) {
-    await sqlite.saveToStore(DB_NAME);
-  }
+  // Native Android/iOS persist writes automatically.
+  // saveToStore is only supported on web/electron.
 }
 
 export async function closeNativeDatabase(): Promise<void> {

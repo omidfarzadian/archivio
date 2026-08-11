@@ -2,7 +2,7 @@ import initSqlJs, { type Database, type SqlJsStatic } from 'sql.js';
 import wasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
 import { MIGRATION_V1 } from './migrations/001_initial';
 
-const IDB_NAME = 'archivio_web';
+const IDB_NAME = 'mava_web';
 const IDB_STORE = 'database';
 const IDB_KEY = 'main';
 
@@ -14,7 +14,7 @@ function openIndexedDB(): Promise<IDBDatabase> {
     const request = indexedDB.open(IDB_NAME, 1);
     request.onerror = () => reject(request.error ?? new Error('IndexedDB open failed'));
     request.onblocked = () =>
-      reject(new Error('IndexedDB is blocked. Close other Archivio tabs and reload.'));
+      reject(new Error('IndexedDB is blocked. Close other Mava tabs and reload.'));
     request.onsuccess = () => resolve(request.result);
     request.onupgradeneeded = () => {
       request.result.createObjectStore(IDB_STORE);

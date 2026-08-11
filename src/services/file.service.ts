@@ -10,7 +10,7 @@ export interface DownloadAttachmentOptions {
   base64?: string;
 }
 
-const BASE_PATH = 'archivio';
+const BASE_PATH = 'mava';
 
 async function ensureDir(path: string): Promise<void> {
   try {

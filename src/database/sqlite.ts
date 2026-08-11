@@ -7,7 +7,7 @@ import {
   clearWebDatabase,
 } from './web-db';
 
-export const DB_NAME = 'archivio_db';
+export const DB_NAME = 'mava_db';
 
 let initPromise: Promise<void> | null = null;
 let nativeModule: typeof import('./native-db') | null = null;
@@ -58,9 +58,6 @@ export async function query(
 export async function persistDatabase(): Promise<void> {
   if (isWeb()) {
     await persistWebDatabase();
-  } else {
-    const native = await getNativeModule();
-    await native.persistNativeDatabase();
   }
 }
 
@@ -72,12 +69,12 @@ export async function runWrite(
 
   if (isWeb()) {
     await webRunWrite(statement, values);
+    await persistWebDatabase();
     return;
   }
 
   const native = await getNativeModule();
   await native.nativeRunWrite(statement, values);
-  await persistDatabase();
 }
 
 export async function closeDatabase(): Promise<void> {
