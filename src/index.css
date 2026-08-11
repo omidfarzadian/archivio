@@ -1,0 +1,183 @@
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'Kook';
+  src: url('/fonts/kook/KookFaNum-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Kook';
+  src: url('/fonts/kook/KookFaNum-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Kook';
+  src: url('/fonts/kook/KookFaNum-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Kook';
+  src: url('/fonts/kook/KookFaNum-ExtraBold.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --color-background: #f7f7f8;
+  --color-surface: #ffffff;
+  --color-text: #171717;
+  --color-text-secondary: #737373;
+  --color-border: #e8e8ec;
+  --color-accent: #6d4aff;
+  --color-accent-light: #8b6fff;
+  --color-danger: #ef4444;
+  --font-kook: 'Kook', system-ui, sans-serif;
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+  --shadow-elevated: 0 12px 40px rgba(109, 74, 255, 0.15), 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-kook);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  direction: rtl;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
+}
+
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.gradient-accent {
+  background: linear-gradient(135deg, #6d4aff 0%, #8b6fff 50%, #a78bfa 100%);
+}
+
+.gradient-accent-text {
+  background: linear-gradient(135deg, #6d4aff 0%, #8b6fff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+.docx-thumb-styles {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Shared scrollable preview area for Excel & Word */
+.file-preview-scroll {
+  max-height: 16rem;
+  overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.docx-preview-body {
+  direction: rtl;
+}
+
+.docx-preview-content {
+  width: 100%;
+  padding: 12px 16px;
+}
+
+.docx-preview-content .docx-thumb-wrapper {
+  padding: 0 !important;
+  background: #fff !important;
+  min-height: auto !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+}
+
+.docx-preview-content .docx-thumb-wrapper > section.docx-thumb {
+  margin: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  min-height: auto !important;
+  width: 100% !important;
+}
+
+.docx-preview-content p,
+.docx-preview-content span,
+.docx-preview-content li,
+.docx-preview-content td {
+  font-size: 0.875rem !important;
+  line-height: 1.6 !important;
+  color: #171717 !important;
+}
+
+.post-editor-content div,
+.post-editor-content p {
+  display: block;
+  margin: 0;
+  min-height: 1.5em;
+}
