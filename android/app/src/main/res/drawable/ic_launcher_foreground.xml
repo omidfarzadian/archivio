@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Adaptive icon canvas is 108x108dp.
+  Important content must stay in the center 72x72 safe zone (18dp inset).
+  Folder paths are mapped from the favicon's 100x100 viewBox into that safe zone.
+-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+    <!-- tab: original favicon path scaled by 0.72 and offset by 18 -->
     <path
         android:fillColor="#E6FFFFFF"
-        android:pathData="M28,36C28,32.7 30.7,30 34,30H45.5L50.5,35H74C77.3,35 80,37.7 80,41V48H28V36Z" />
+        android:pathData="M32.4,39.6C32.4,36.72 34.56,34.56 37.44,34.56H48.24L52.56,38.88H70.56C73.44,38.88 75.6,41.04 75.6,43.92V68.4C75.6,71.28 73.44,73.44 70.56,73.44H37.44C34.56,73.44 32.4,71.28 32.4,68.4V39.6Z" />
+    <!-- body -->
     <path
-        android:fillColor="#BFFFFFFF"
-        android:pathData="M28,44C28,40.7 30.7,38 34,38H74C77.3,38 80,40.7 80,44V72C80,75.3 77.3,78 74,78H34C30.7,78 28,75.3 28,72V44Z" />
+        android:fillColor="#B3FFFFFF"
+        android:pathData="M32.4,45.36C32.4,42.48 34.56,40.32 37.44,40.32H70.56C73.44,40.32 75.6,42.48 75.6,45.36V68.4C75.6,71.28 73.44,73.44 70.56,73.44H37.44C34.56,73.44 32.4,71.28 32.4,68.4V45.36Z" />
 </vector>
