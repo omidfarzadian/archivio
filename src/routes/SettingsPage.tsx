@@ -183,7 +183,7 @@ export function SettingsPage() {
                 <p className="font-bold text-text">{t("app.name")}</p>
                 <p className="text-sm text-text-secondary">{t("app.tagline")}</p>
                 <p className="text-xs text-text-secondary/70 mt-1">
-                  {t("app.version", { version: "1.0.0" })}
+                  {t("app.version", { version: "1.0.1" })}
                 </p>
               </div>
             </div>
