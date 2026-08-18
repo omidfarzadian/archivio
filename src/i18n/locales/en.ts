@@ -31,6 +31,8 @@ export const en: Record<TranslationKey, string> = {
   'home.searchPlaceholder': 'Search categories...',
   'home.noSearchResults': 'No categories match this name',
   'home.deleteConfirm': 'Delete category “{{name}}”? This cannot be undone.',
+  'home.viewWindow': 'Window view',
+  'home.viewList': 'List view',
 
   'empty.noCategoriesTitle': 'No categories yet',
   'empty.noCategoriesBody': 'Create your first category to get started',

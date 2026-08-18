@@ -30,6 +30,8 @@ export const fa = {
   'home.searchPlaceholder': 'جستجو در دسته‌بندی‌ها...',
   'home.noSearchResults': 'دسته‌بندی‌ای با این نام پیدا نشد',
   'home.deleteConfirm': 'آیا از حذف دسته‌بندی «{{name}}» مطمئن هستید؟',
+  'home.viewWindow': 'نمایش پنجره‌ای',
+  'home.viewList': 'نمایش فهرستی',
 
   'empty.noCategoriesTitle': 'هنوز دسته‌بندی ندارید',
   'empty.noCategoriesBody':

@@ -1,10 +1,11 @@
 interface FolderIcon3DProps {
   color: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   className?: string;
 }
 
 const sizes = {
+  xs: { width: 40, height: 33 },
   sm: { width: 56, height: 46 },
   md: { width: 80, height: 66 },
   lg: { width: 110, height: 90 },
