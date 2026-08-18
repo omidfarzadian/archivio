@@ -90,7 +90,7 @@ export function PostCard({
 
       {documents.length > 0 && (
         <div className="space-y-2 mb-3">
-          {documents.slice(0, 2).map((doc) => (
+          {documents.map((doc) => (
             <AttachmentCard key={doc.id} attachment={doc} />
           ))}
         </div>
