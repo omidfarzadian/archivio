@@ -21,7 +21,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
         aria-hidden
       />
       <div
-        className="relative z-10 w-full max-w-lg animate-slide-up rounded-t-3xl bg-surface !p-6 shadow-elevated safe-bottom sm:rounded-3xl sm:m-4"
+        className="relative z-10 w-full max-w-lg animate-slide-up rounded-t-3xl bg-surface px-6 pt-6 shadow-elevated safe-bottom sm:rounded-3xl sm:m-4"
         onClick={(e) => e.stopPropagation()}
         onMouseDown={(e) => e.stopPropagation()}
       >

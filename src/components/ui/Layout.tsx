@@ -32,17 +32,21 @@ export function PageHeader({
 }: PageHeaderProps) {
   return (
     <header className="sticky top-0 z-30 bg-background/95 backdrop-blur-lg border-b border-border safe-top">
-      <div className="flex min-h-14 items-center justify-between px-4 py-2.5 max-w-lg mx-auto">
-        <div className="flex min-w-10 shrink-0 justify-start">{leftAction}</div>
-        <div className="min-w-0 flex-1 text-center">
+      <div className="grid min-h-14 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 px-4 py-2.5 max-w-lg mx-auto">
+        <div className="flex min-w-0 items-center justify-start">
+          {leftAction}
+        </div>
+        <div className="min-w-0 max-w-[46vw] text-center">
           <h1 className="truncate text-sm font-bold leading-tight text-text">
             {title}
           </h1>
           {subtitle && (
-            <p className="text-xs text-text-secondary mt-0.5">{subtitle}</p>
+            <p className="truncate text-xs text-text-secondary mt-0.5">
+              {subtitle}
+            </p>
           )}
         </div>
-        <div className="flex min-w-10 shrink-0 items-center justify-end">
+        <div className="flex min-w-0 items-center justify-end">
           {rightAction}
         </div>
       </div>

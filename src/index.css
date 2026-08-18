@@ -78,14 +78,20 @@ body {
   overscroll-behavior: none;
 }
 
-.safe-top {
-  padding-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+.safe-top-viewer {
+  padding-top: max(
+    2.75rem,
+    var(--safe-area-inset-top, env(safe-area-inset-top, 0px))
+  );
 }
 
 .safe-bottom {
-  padding-bottom: var(
-    --safe-area-inset-bottom,
-    env(safe-area-inset-bottom, 0px)
+  padding-bottom: calc(
+    0.75rem +
+      max(
+        2.25rem,
+        var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px))
+      )
   );
 }
 

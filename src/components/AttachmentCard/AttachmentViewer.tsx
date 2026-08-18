@@ -128,28 +128,30 @@ export function AttachmentViewer({
 
   return (
     <div className="fixed inset-0 z-[60] flex flex-col bg-black/90 animate-fade-in">
-      <div className="flex items-center gap-2 border-b border-white/10 bg-black/40 px-3 py-2.5">
-        <button
-          type="button"
-          onClick={onClose}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors"
-          aria-label={t("common.close")}
-        >
-          <IconX size={22} className="text-white" />
-        </button>
-        <p
-          className="flex-1 min-w-0 truncate text-sm font-medium text-white"
-          style={{ direction: "ltr" }}
-        >
-          {attachment.name}
-        </p>
-        <AttachmentDownloadButton
-          name={attachment.name}
-          mimeType={attachment.mimeType}
-          localPath={attachment.localPath}
-          size={20}
-          className="h-9 w-9 text-white hover:bg-white/10"
-        />
+      <div className="shrink-0 border-b border-white/10 bg-black/40 safe-top-viewer">
+        <div className="flex items-center gap-2 px-3 py-2.5">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors"
+            aria-label={t("common.close")}
+          >
+            <IconX size={22} className="text-white" />
+          </button>
+          <p
+            className="flex-1 min-w-0 truncate text-sm font-medium text-white"
+            style={{ direction: "ltr" }}
+          >
+            {attachment.name}
+          </p>
+          <AttachmentDownloadButton
+            name={attachment.name}
+            mimeType={attachment.mimeType}
+            localPath={attachment.localPath}
+            size={20}
+            className="h-9 w-9 text-white hover:bg-white/10"
+          />
+        </div>
       </div>
 
       <div className="flex-1 min-h-0 overflow-hidden overscroll-contain safe-bottom">

@@ -468,7 +468,7 @@ export function PostEditor({
         }}
       />
 
-      <div className="border-t border-border bg-surface !p-4 safe-bottom">
+      <div className="border-t border-border bg-surface px-4 pt-4 safe-bottom">
         <div className="max-w-lg mx-auto flex gap-3">
           {mode === "edit" && onDelete ? (
             <>

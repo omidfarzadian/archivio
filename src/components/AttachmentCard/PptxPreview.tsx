@@ -3,6 +3,7 @@ import { IconFileTypePpt } from "@tabler/icons-react";
 import {
   loadPptxSlides,
   type PptxPreviewData,
+  type PptxSlide,
 } from "@/services/pptx-preview.service";
 import { AttachmentDownloadButton } from "@/components/AttachmentCard/AttachmentDownloadButton";
 import { useT } from "@/i18n";
@@ -17,38 +18,107 @@ interface PptxPreviewProps {
   full?: boolean;
 }
 
+function SlideVisual({ slide, full }: { slide: PptxSlide; full: boolean }) {
+  const ratio = slide.width > 0 && slide.height > 0 ? slide.width / slide.height : 16 / 9;
+  const hasVisual = slide.images.length > 0 || slide.texts.length > 0;
+
+  return (
+    <div
+      className="relative w-full overflow-hidden bg-white"
+      style={{
+        aspectRatio: `${ratio}`,
+        background: slide.background,
+        containerType: "size",
+      }}
+    >
+      {slide.images.map((image, i) => (
+        <img
+          key={`img-${i}`}
+          src={image.src}
+          alt=""
+          className="absolute object-fill"
+          style={{
+            left: `${image.x}%`,
+            top: `${image.y}%`,
+            width: `${image.w}%`,
+            height: `${image.h}%`,
+          }}
+        />
+      ))}
+
+      {slide.texts.map((block, i) => (
+        <div
+          key={`txt-${i}`}
+          className="absolute overflow-hidden"
+          style={{
+            left: `${block.x}%`,
+            top: `${block.y}%`,
+            width: `${block.w}%`,
+            height: `${block.h}%`,
+            color: block.color,
+            fontSize: `${block.fontSize}cqh`,
+            fontWeight: block.bold ? 700 : 500,
+            lineHeight: 1.25,
+            textAlign: "start",
+          }}
+        >
+          {block.lines.map((line, li) => (
+            <p
+              key={li}
+              className={full ? "whitespace-pre-wrap break-words" : "line-clamp-3"}
+            >
+              {line}
+            </p>
+          ))}
+        </div>
+      ))}
+
+      {!hasVisual && slide.lines.length > 0 && (
+        <div className="absolute inset-0 overflow-auto space-y-1.5 p-[6%]">
+          {slide.lines.map((line, i) => (
+            <p
+              key={i}
+              className={
+                i === 0
+                  ? "text-[5cqh] font-semibold text-text"
+                  : "text-[3.2cqh] text-text-secondary"
+              }
+            >
+              {line}
+            </p>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function SlideCard({
   slide,
   label,
+  full,
 }: {
-  slide: { lines: string[] };
+  slide: PptxSlide;
   label: string;
+  full: boolean;
 }) {
+  const empty =
+    slide.images.length === 0 &&
+    slide.texts.length === 0 &&
+    slide.lines.length === 0;
+
   return (
-    <div className="rounded-lg border border-orange-100 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-lg border border-orange-100 bg-white shadow-sm">
       <div className="border-b border-orange-100 px-3 py-1.5">
         <span className="text-[11px] font-medium text-orange-700">{label}</span>
       </div>
-      <div className="aspect-video overflow-hidden px-4 py-3">
-        {slide.lines.length > 0 ? (
-          <div className="space-y-1.5">
-            {slide.lines.map((line, i) => (
-              <p
-                key={i}
-                className={
-                  i === 0
-                    ? "text-sm font-semibold text-text line-clamp-2"
-                    : "text-xs text-text-secondary line-clamp-2"
-                }
-              >
-                {line}
-              </p>
-            ))}
-          </div>
-        ) : (
+      {empty ? (
+        <div className="flex aspect-video items-center justify-center bg-orange-50/40">
           <p className="text-xs italic text-text-secondary/60">—</p>
-        )}
-      </div>
+        </div>
+      ) : (
+        <SlideVisual slide={slide} full={full} />
+      )}
     </div>
   );
 }
@@ -152,6 +222,7 @@ export function PptxPreview({
             <SlideCard
               key={slide.index}
               slide={slide}
+              full={full}
               label={t("attachment.slideLabel").replace(
                 "{{n}}",
                 String(slide.index),
