@@ -78,6 +78,7 @@ body {
   overscroll-behavior: none;
 }
 
+.safe-top,
 .safe-top-viewer {
   padding-top: max(
     2.75rem,
