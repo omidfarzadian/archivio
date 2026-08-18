@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { IconArrowLeft, IconArrowRight, IconPlus, IconSearch } from "@tabler/icons-react";
+import {
+  IconArrowLeft,
+  IconArrowRight,
+  IconPlus,
+  IconSearch,
+} from "@tabler/icons-react";
 import { AppLayout, PageHeader } from "@/components/ui/Layout";
 import { PostCard } from "@/components/PostCard/PostCard";
 import { PostEditor } from "@/features/posts/components/PostEditor";
@@ -137,8 +142,18 @@ export function CategoryPage() {
             ))}
           </div>
         ) : posts.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-text-secondary text-sm">{t("category.noPosts")}</p>
+          <div className="text-center py-16 flex flex-col gap-4">
+            <p className="text-text-secondary text-base">
+              {t("category.noPosts")}
+            </p>
+
+            <button
+              onClick={() => setCreatingPost(true)}
+              className="flex items-center justify-center gap-2 py-2 px-4 w-fit rounded-2xl gradient-accent text-sm text-white font-medium whitespace-nowrap shadow-elevated active:scale-[0.98] transition-transform mx-auto"
+            >
+              <IconPlus size={20} stroke={2.5} />
+              {t("category.addPost")}
+            </button>
           </div>
         ) : (
           <div className="space-y-4 pb-4">
@@ -153,18 +168,6 @@ export function CategoryPage() {
           </div>
         )}
       </div>
-
-      {showFloatingAdd && (
-        <div className="fixed bottom-above-nav inset-x-0 px-4 z-30 max-w-lg mx-auto mb-4">
-          <button
-            onClick={() => setCreatingPost(true)}
-            className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl gradient-accent text-white font-medium shadow-elevated active:scale-[0.98] transition-transform"
-          >
-            <IconPlus size={20} stroke={2.5} />
-            {t("category.addPost")}
-          </button>
-        </div>
-      )}
 
       <PostEditor
         open={creatingPost}

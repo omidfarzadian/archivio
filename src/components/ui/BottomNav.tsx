@@ -14,8 +14,8 @@ export function BottomNav() {
   ] as const;
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-40 border-t border-border bg-surface/95 backdrop-blur-lg safe-bottom">
-      <div className="flex items-center justify-around px-4 py-2 max-w-lg mx-auto">
+    <nav className="shrink-0 border-t border-border bg-surface/95 backdrop-blur-lg safe-bottom">
+      <div className="flex items-center justify-around px-2 py-1.5 max-w-lg mx-auto">
         {tabs.map(({ to, label, icon: Icon }) => {
           const active = location.pathname === to;
           return (
@@ -23,12 +23,19 @@ export function BottomNav() {
               key={to}
               to={to}
               className={cn(
-                'flex flex-col items-center gap-1 px-4 py-2 rounded-2xl transition-all duration-200 min-w-[72px]',
+                'flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-2xl px-2 py-1.5 transition-all duration-200',
                 active ? 'text-accent' : 'text-text-secondary',
               )}
             >
               <Icon size={22} stroke={active ? 2 : 1.5} />
-              <span className={cn('text-xs', active && 'font-bold')}>{label}</span>
+              <span
+                className={cn(
+                  'max-w-full truncate text-[11px] leading-none',
+                  active && 'font-bold',
+                )}
+              >
+                {label}
+              </span>
             </NavLink>
           );
         })}
