@@ -79,7 +79,6 @@ export function CategoryPage() {
   }
 
   const showHeaderAdd = !editorOpen && !loading && posts.length > 0;
-  const showFloatingAdd = !editorOpen && !loading && posts.length === 0;
 
   return (
     <AppLayout hideNav={editorOpen}>
