@@ -73,10 +73,16 @@ export function getAttachmentType(mimeType: string): 'image' | 'document' {
   return mimeType.startsWith('image/') ? 'image' : 'document';
 }
 
-export function getFileIcon(mimeType: string, name: string): 'excel' | 'word' | 'pdf' | 'file' {
+export function getFileIcon(
+  mimeType: string,
+  name: string,
+): 'excel' | 'word' | 'pdf' | 'powerpoint' | 'file' {
   const lower = (mimeType + name).toLowerCase();
   if (lower.includes('spreadsheet') || lower.includes('excel') || lower.endsWith('.xlsx') || lower.endsWith('.xls')) {
     return 'excel';
+  }
+  if (lower.includes('presentationml') || lower.includes('powerpoint') || lower.endsWith('.pptx') || lower.endsWith('.ppt')) {
+    return 'powerpoint';
   }
   if (lower.includes('word') || lower.endsWith('.docx') || lower.endsWith('.doc')) {
     return 'word';

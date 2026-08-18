@@ -3,8 +3,9 @@ import { formatFileSize } from "@/utils/format";
 import { getFileIcon } from "@/services/picker.service";
 import { FilePreviewThumbnail } from "@/components/AttachmentCard/FilePreviewThumbnail";
 import { AttachmentDownloadButton } from "@/components/AttachmentCard/AttachmentDownloadButton";
+import { AttachmentViewer } from "@/components/AttachmentCard/AttachmentViewer";
 import type { Attachment } from "@/features/categories/types";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type KeyboardEvent } from "react";
 import { readFileAsBlobUrl } from "@/services/file.service";
 import { useI18n, useT } from "@/i18n";
 
@@ -26,6 +27,8 @@ function getFileTypeLabel(
       return "Word";
     case "pdf":
       return "PDF";
+    case "powerpoint":
+      return "PowerPoint";
     default:
       return fileLabel;
   }
@@ -71,7 +74,10 @@ function DocumentAttachmentContent({
         {onRemove && (
           <button
             type="button"
-            onClick={onRemove}
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemove();
+            }}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full hover:bg-background transition-colors"
             aria-label={t("post.editor.deleteFile")}
           >
@@ -86,6 +92,15 @@ function DocumentAttachmentContent({
 export function AttachmentCard({ attachment, onRemove }: AttachmentCardProps) {
   const t = useT();
   const [thumbUrl, setThumbUrl] = useState<string | null>(null);
+  const [viewerOpen, setViewerOpen] = useState(false);
+
+  const openViewer = () => setViewerOpen(true);
+  const openViewerFromKey = (e: KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setViewerOpen(true);
+    }
+  };
 
   useEffect(() => {
     if (attachment.type !== "image") return;
@@ -110,7 +125,12 @@ export function AttachmentCard({ attachment, onRemove }: AttachmentCardProps) {
   if (attachment.type === "image") {
     return (
       <div className="relative aspect-square group">
-        <div className="h-full w-full rounded-2xl overflow-hidden bg-background border border-border">
+        <button
+          type="button"
+          onClick={openViewer}
+          className="h-full w-full rounded-2xl overflow-hidden bg-background border border-border block cursor-pointer"
+          aria-label={t("attachment.view")}
+        >
           {thumbUrl ? (
             <img
               src={thumbUrl}
@@ -121,7 +141,7 @@ export function AttachmentCard({ attachment, onRemove }: AttachmentCardProps) {
           ) : (
             <div className="h-full w-full animate-pulse bg-border" />
           )}
-        </div>
+        </button>
         <div className="absolute top-1.5 end-1.5 flex items-center gap-1">
           <AttachmentDownloadButton
             name={attachment.name}
@@ -133,21 +153,45 @@ export function AttachmentCard({ attachment, onRemove }: AttachmentCardProps) {
         {onRemove && (
           <button
             type="button"
-            onClick={onRemove}
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemove();
+            }}
             className="absolute top-1.5 start-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-surface/90 border border-border shadow-sm"
             aria-label={t("post.editor.deleteImage")}
           >
             <IconX size={12} className="text-text-secondary" />
           </button>
         )}
+        {viewerOpen && (
+          <AttachmentViewer
+            attachment={attachment}
+            onClose={() => setViewerOpen(false)}
+          />
+        )}
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-surface overflow-hidden">
-      <DocumentAttachmentContent attachment={attachment} onRemove={onRemove} />
-    </div>
+    <>
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={openViewer}
+        onKeyDown={openViewerFromKey}
+        className="rounded-2xl border border-border bg-surface overflow-hidden cursor-pointer transition-colors hover:border-accent/40"
+        aria-label={t("attachment.view")}
+      >
+        <DocumentAttachmentContent attachment={attachment} onRemove={onRemove} />
+      </div>
+      {viewerOpen && (
+        <AttachmentViewer
+          attachment={attachment}
+          onClose={() => setViewerOpen(false)}
+        />
+      )}
+    </>
   );
 }
 

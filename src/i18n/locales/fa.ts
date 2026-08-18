@@ -110,6 +110,12 @@ export const fa = {
   'attachment.downloadError': 'خطا در دانلود فایل',
   'attachment.excel': 'فایل Excel',
   'attachment.word': 'فایل Word',
+  'attachment.pdf': 'فایل PDF',
+  'attachment.powerpoint': 'فایل PowerPoint',
+  'attachment.view': 'مشاهده فایل',
+  'attachment.pdfPages': 'PDF · {{n}} صفحه',
+  'attachment.pptxSlides': 'PowerPoint · {{n}} اسلاید',
+  'attachment.slideLabel': 'اسلاید {{n}}',
 
   'format.byte': '{{n}} بایت',
   'format.kilobyte': '{{n}} کیلوبایت',

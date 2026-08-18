@@ -193,38 +193,69 @@ export async function writeBinaryFile(path: string, data: Uint8Array): Promise<v
   });
 }
 
-export async function downloadAttachment({
-  name,
-  mimeType,
+/** Resolves the raw base64 payload (no data-URL prefix) for an attachment. */
+async function resolveAttachmentBase64({
   localPath,
   base64,
-}: DownloadAttachmentOptions): Promise<void> {
-  let blobUrl: string;
-  let shouldRevoke = false;
+}: DownloadAttachmentOptions): Promise<string> {
+  if (base64) return base64;
 
-  if (base64) {
-    const bytes = base64ToUint8Array(base64);
-    blobUrl = URL.createObjectURL(new Blob([bytes.slice()], { type: mimeType }));
-    shouldRevoke = true;
-  } else if (localPath?.startsWith('data:')) {
+  if (localPath?.startsWith('data:')) {
     const base64Part = localPath.split(',')[1];
     if (!base64Part) throw new Error('Invalid data URL');
-    const bytes = base64ToUint8Array(base64Part);
-    blobUrl = URL.createObjectURL(new Blob([bytes.slice()], { type: mimeType }));
-    shouldRevoke = true;
-  } else if (localPath) {
-    blobUrl = await readFileAsBlobUrl(localPath, mimeType);
-    shouldRevoke = true;
-  } else {
-    throw new Error('No file data');
+    return base64Part;
   }
+
+  if (localPath) return readFileAsBase64(localPath);
+
+  throw new Error('No file data');
+}
+
+/**
+ * Native browsers (Android WebView) ignore the `<a download>` attribute, so the
+ * desktop anchor trick silently does nothing on device. On native platforms we
+ * instead write the file to the cache dir and hand it to the OS share sheet,
+ * which lets the user save or open it in another app.
+ */
+async function shareAttachmentNative(
+  name: string,
+  base64: string,
+): Promise<void> {
+  const { Share } = await import('@capacitor/share');
+  const path = `${BASE_PATH}/${STORAGE_DIRS.backups}/${Date.now()}_${name}`;
+
+  await Filesystem.writeFile({
+    path,
+    data: base64,
+    directory: Directory.Cache,
+  });
+
+  const { uri } = await Filesystem.getUri({ path, directory: Directory.Cache });
+
+  // Leave the temp file in the OS cache — deleting it here can race the target
+  // app reading the URI. The cache directory is cleared by the OS over time.
+  await Share.share({ title: name, url: uri });
+}
+
+export async function downloadAttachment(
+  options: DownloadAttachmentOptions,
+): Promise<void> {
+  const { name, mimeType } = options;
+
+  if (Capacitor.isNativePlatform()) {
+    const base64 = await resolveAttachmentBase64(options);
+    await shareAttachmentNative(name, base64);
+    return;
+  }
+
+  const base64 = await resolveAttachmentBase64(options);
+  const bytes = base64ToUint8Array(base64);
+  const blobUrl = URL.createObjectURL(new Blob([bytes.slice()], { type: mimeType }));
 
   const anchor = document.createElement('a');
   anchor.href = blobUrl;
   anchor.download = name;
   anchor.click();
 
-  if (shouldRevoke) {
-    window.setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
-  }
+  window.setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
 }

@@ -110,6 +110,12 @@ export const en: Record<TranslationKey, string> = {
   'attachment.downloadError': 'Could not download file',
   'attachment.excel': 'Excel file',
   'attachment.word': 'Word file',
+  'attachment.pdf': 'PDF file',
+  'attachment.powerpoint': 'PowerPoint file',
+  'attachment.view': 'View file',
+  'attachment.pdfPages': 'PDF · {{n}} pages',
+  'attachment.pptxSlides': 'PowerPoint · {{n}} slides',
+  'attachment.slideLabel': 'Slide {{n}}',
 
   'format.byte': '{{n}} B',
   'format.kilobyte': '{{n}} KB',

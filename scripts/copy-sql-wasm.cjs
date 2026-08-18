@@ -20,3 +20,22 @@ try {
 } catch (err) {
   console.warn('Could not copy sql-wasm.wasm:', err.message);
 }
+
+// pdf.js needs its standard fonts and CMaps served as static assets so that
+// PDFs using the standard-14 fonts or CJK encodings render (otherwise page
+// rendering can stall). Stage them into public/ for both web and native.
+try {
+  const pdfDist = path.dirname(require.resolve('pdfjs-dist/package.json'));
+  const targets = [
+    ['standard_fonts', path.join(__dirname, '../public/pdf/standard_fonts')],
+    ['cmaps', path.join(__dirname, '../public/pdf/cmaps')],
+  ];
+  for (const [name, dest] of targets) {
+    const src = path.join(pdfDist, name);
+    fs.rmSync(dest, { recursive: true, force: true });
+    fs.cpSync(src, dest, { recursive: true });
+  }
+  console.log('Copied pdf.js standard_fonts and cmaps to public/pdf');
+} catch (err) {
+  console.warn('Could not copy pdf.js assets:', err.message);
+}

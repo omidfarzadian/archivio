@@ -14,6 +14,8 @@ interface ExcelPreviewProps {
   name: string;
   mimeType: string;
   className?: string;
+  /** Render every slide (full-screen viewer) instead of just the first. */
+  full?: boolean;
 }
 
 export function ExcelPreview({
@@ -22,6 +24,7 @@ export function ExcelPreview({
   name,
   mimeType,
   className,
+  full = false,
 }: ExcelPreviewProps) {
   const t = useT();
   const [preview, setPreview] = useState<ExcelPreviewData | null>(null);
@@ -53,28 +56,35 @@ export function ExcelPreview({
     };
   }, [base64, localPath, name]);
 
+  const shellClass = `overflow-hidden rounded-xl border border-green-100 bg-white ${full ? "flex h-full min-h-0 flex-col" : ""} ${className ?? ""}`;
+  const scrollClass = full
+    ? "file-preview-scroll-full"
+    : "file-preview-scroll";
+
   if (loading) {
     return (
-      <div
-        className={`overflow-hidden rounded-xl border border-green-100 bg-white ${className ?? ""}`}
-      >
+      <div className={shellClass}>
         <div className="flex items-center gap-2 border-b border-green-100 bg-green-50 px-3 py-2">
           <IconFileSpreadsheet size={16} className="text-green-600" />
           <span className="text-xs font-medium text-green-700">Excel</span>
         </div>
-        <div className="file-preview-scroll h-48 animate-pulse bg-green-50/40" />
+        <div
+          className={`${scrollClass} ${full ? "" : "h-48"} animate-pulse bg-green-50/40`}
+        />
       </div>
     );
   }
 
   if (!preview || (preview.headers.length === 0 && preview.rows.length === 0)) {
     return (
-      <div
-        className={`overflow-hidden rounded-xl border border-green-100 bg-white ${className ?? ""}`}
-      >
-        <div className="file-preview-scroll flex h-48 items-center justify-center gap-2 bg-green-50/50">
+      <div className={shellClass}>
+        <div
+          className={`${scrollClass} flex ${full ? "" : "h-48"} items-center justify-center gap-2 bg-green-50/50`}
+        >
           <IconFileSpreadsheet size={24} className="text-green-600" />
-          <span className="text-xs text-green-700">{t('attachment.excel')}</span>
+          <span className="text-xs text-green-700">
+            {t("attachment.excel")}
+          </span>
         </div>
       </div>
     );
@@ -86,9 +96,7 @@ export function ExcelPreview({
     preview.headers.length > 0 ? preview.rows : preview.rows.slice(1);
 
   return (
-    <div
-      className={`overflow-hidden rounded-xl border border-green-100 bg-white ${className ?? ""}`}
-    >
+    <div className={shellClass}>
       <div className="flex items-center justify-between border-b border-green-100 bg-green-50 px-3 py-2">
         <div className="flex items-center gap-1.5">
           <IconFileSpreadsheet size={16} className="text-green-600" />
@@ -104,7 +112,7 @@ export function ExcelPreview({
           />
         </div>
       </div>
-      <div className="file-preview-scroll">
+      <div className={scrollClass}>
         <table className="w-full min-w-max border-collapse text-xs leading-relaxed">
           {columns.length > 0 && (
             <thead className="sticky top-0 z-10">

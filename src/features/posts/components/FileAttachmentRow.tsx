@@ -28,6 +28,8 @@ function getFileTypeLabel(
       return "Word";
     case "pdf":
       return "PDF";
+    case "powerpoint":
+      return "PowerPoint";
     default:
       return fileLabel;
   }

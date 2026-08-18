@@ -1,13 +1,18 @@
 import { isDocxFile } from '@/services/docx-preview.service';
 import { isExcelFile } from '@/services/xlsx-preview.service';
+import { isPdfFile } from '@/services/pdf-preview.service';
+import { isPptxFile } from '@/services/pptx-preview.service';
 import { DocxPreview } from '@/components/AttachmentCard/DocxPreview';
 import { ExcelPreview } from '@/components/AttachmentCard/ExcelPreview';
+import { PdfPreview } from '@/components/AttachmentCard/PdfPreview';
+import { PptxPreview } from '@/components/AttachmentCard/PptxPreview';
 import { AttachmentDownloadButton } from '@/components/AttachmentCard/AttachmentDownloadButton';
 import {
   IconFile,
   IconFileTypePdf,
   IconFileSpreadsheet,
   IconFileTypeDocx,
+  IconFileTypePpt,
 } from '@tabler/icons-react';
 import { getFileIcon } from '@/services/picker.service';
 import { useT } from '@/i18n';
@@ -31,6 +36,8 @@ function FileTypeIcon({ mimeType, name }: { mimeType: string; name: string }) {
       return <IconFileTypeDocx {...iconProps} className="text-blue-600" />;
     case 'pdf':
       return <IconFileTypePdf {...iconProps} className="text-red-500" />;
+    case 'powerpoint':
+      return <IconFileTypePpt {...iconProps} className="text-orange-600" />;
     default:
       return <IconFile {...iconProps} className="text-text-secondary" />;
   }
@@ -49,6 +56,8 @@ function getFileTypeLabel(
       return 'Word';
     case 'pdf':
       return 'PDF';
+    case 'powerpoint':
+      return 'PowerPoint';
     default:
       return fileLabel;
   }
@@ -87,6 +96,30 @@ export function FilePreviewThumbnail({
     );
   }
 
+  if (isPdfFile(mimeType, name)) {
+    return (
+      <PdfPreview
+        base64={base64}
+        localPath={localPath}
+        name={name}
+        mimeType={mimeType}
+        className={className}
+      />
+    );
+  }
+
+  if (isPptxFile(mimeType, name)) {
+    return (
+      <PptxPreview
+        base64={base64}
+        localPath={localPath}
+        name={name}
+        mimeType={mimeType}
+        className={className}
+      />
+    );
+  }
+
   return (
     <div className={`overflow-hidden rounded-xl border border-border bg-background ${className ?? ''}`}>
       <div className="flex items-center justify-between border-b border-border bg-surface px-3 py-2">
@@ -111,5 +144,10 @@ export function FilePreviewThumbnail({
 }
 
 export function hasFilePreview(mimeType: string, name: string): boolean {
-  return isExcelFile(mimeType, name) || isDocxFile(mimeType, name);
+  return (
+    isExcelFile(mimeType, name) ||
+    isDocxFile(mimeType, name) ||
+    isPdfFile(mimeType, name) ||
+    isPptxFile(mimeType, name)
+  );
 }
